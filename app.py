@@ -82,10 +82,10 @@ if __name__ == '__main__':
     limpar_colecoes()
     migrar_dados()
 
-    print("Saídas estarão disponíveis na pasta './resultados'.")
+    print("Saídas estarão disponíveis na pasta './resultados_docs'.")
 
-    if not os.path.exists('./resultados'):
-        os.makedirs('./resultados')
+    if not os.path.exists('./resultados_docs'):
+        os.makedirs('./resultados_docs')
 
     buscar_historico_aluno()
     disciplinas_professor()

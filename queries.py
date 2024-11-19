@@ -43,7 +43,7 @@ def buscar_historico_aluno():
         resultado[i]["codigo_disciplina"] = linha["detalhes_disciplina"]["title"]
         resultado[i].pop("detalhes_disciplina")
 
-    with open('./resultados/historico-escolar.json', 'w') as f:
+    with open('./resultados_docs/historico-escolar.json', 'w') as f:
         json.dump(resultado, f, ensure_ascii=False)
 
 # Retorna o histórico de disciplinas ministradas pelo professor com o ID selecionado
@@ -59,7 +59,7 @@ def disciplinas_professor():
     for i, linha in enumerate(resultado):
         resultado[i]["_id"] = str(linha["_id"])
 
-    with open('./resultados/disc-professores.json', 'w') as f:
+    with open('./resultados_docs/disc-professores.json', 'w') as f:
         json.dump(resultado, f, ensure_ascii=False)
 
 # Retorna os alunos que se formaram no segundo semestre de 2018
@@ -75,7 +75,7 @@ def alunos_formados():
     for i, linha in enumerate(resultado):
         resultado[i]["_id"] = str(linha["_id"])
 
-    with open('./resultados/alunos-formados.json', 'w') as f:
+    with open('./resultados_docs/alunos-formados.json', 'w') as f:
         json.dump(resultado, f, ensure_ascii=False)
 
 # Retorna os professores que são chefes de departamento
@@ -102,7 +102,7 @@ def chefes_departamento():
         resultado[i] = detalhes_professor
         resultado[i]["_id"] = str(resultado[i]["_id"])
 
-    with open('./resultados/prof-chefes.json', 'w') as f:
+    with open('./resultados_docs/prof-chefes.json', 'w') as f:
         json.dump(resultado, f, ensure_ascii=False)
 
 # Retorna os alunos que formaram/formam um grupo específico de TCC, juntamente com o professor orientador
@@ -110,7 +110,7 @@ def grupo_de_tcc():
     print("Alunos participantes do grupo CC1234567")
 
     pipeline = [
-        {"$match": {"group_id": "EP1111111"}},
+        {"$match": {"group_id": "CC1234567"}},
         {"$lookup": {
             "from": "tcc_group",
             "localField": "group_id",
@@ -124,7 +124,7 @@ def grupo_de_tcc():
             "foreignField": "id",  
             "as": "detalhes_professor"
         }},
-        {"$unwind": {"path": "$detalhes_professor", "preserveNullAndEmptyArrays": True}},  # Não quebra se não houver correspondência
+        {"$unwind": {"path": "$detalhes_professor", "preserveNullAndEmptyArrays": True}},
         {"$project": {  
             "id": 1,
             "name": 1,
@@ -154,9 +154,5 @@ def grupo_de_tcc():
         }
         registros["alunos"].append(aluno)
 
-    # Salvar em arquivo JSON
-    os.makedirs('./resultados', exist_ok=True)
-    with open('./resultados/grupo-tcc.json', 'w') as f:
+    with open('./resultados_docs/grupo-tcc.json', 'w') as f:
         json.dump(registros, f, ensure_ascii=False)
-
-    print("Dados do grupo de TCC salvos em './resultados/grupo-tcc.json'.")
